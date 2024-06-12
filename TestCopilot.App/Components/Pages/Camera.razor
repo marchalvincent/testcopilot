@@ -1,0 +1,70 @@
+﻿@page "/camera"
+@using Azure.AI.Vision.Face
+@using TestCopilot.App.Clients
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject ICameraClient cameraClient
+
+<PageTitle>Camera</PageTitle>
+
+<h3>Camera</h3>
+
+<h1>Blazor Webcam</h1>
+<video id="videoFeed" width="320" height="240" />
+<canvas class="d-none" id="currentFrame" width="320" height="240" />
+<br />
+<button class="btn btn-primary mb-3" @onclick="CaptureFrame">Capture Frame</button>
+<br />
+@if (loadingFaceApi)
+{
+    <p><em>Loading...</em></p>
+}
+
+@if (_faceResult != null)
+{
+    <h3>Face Detection Results</h3>
+    <ul>
+        @foreach (var face in _faceResult)
+        {
+            <li>
+                <strong>Face ID:</strong> @face.FaceId<br />
+                <strong>Face Attributes:</strong> <br />
+                - <strong>Age:</strong> @face.FaceAttributes.Age <br />
+                - <strong>Beard:</strong> @face.FaceAttributes.FacialHair.Beard <br />
+                - <strong>Accessories:</strong> @string.Join(", ", face.FaceAttributes.Accessories) <br />
+                - <strong>Exposure:</strong> @face.FaceAttributes.Exposure.ExposureLevel (@face.FaceAttributes.Exposure.Value) <br />
+                - <strong>Hair color:</strong> @face.FaceAttributes.Hair.HairColor <br />
+                - <strong>Glasses:</strong> @(face.FaceAttributes.Glasses.HasValue ? face.FaceAttributes.Glasses.Value : "No glasses")<br />
+                - <strong>Smiling:</strong> @face.FaceAttributes.Smile <br />
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private IReadOnlyList<FaceDetectionResult> _faceResult;
+    private bool loadingFaceApi = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("startVideo", "videoFeed");
+            StateHasChanged();
+        }
+    }
+
+    private async Task CaptureFrame()
+    {
+        await JS.InvokeAsync<String>("getFrame", "videoFeed", "currentFrame", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public async Task ProcessImage(string imageString)
+    {
+        loadingFaceApi = true;
+        byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
+        _faceResult = await cameraClient.AnalyseFacesAsync(imageData);
+        loadingFaceApi = false;
+    }
+}
