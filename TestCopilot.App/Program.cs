@@ -15,6 +15,7 @@ builder.Configuration
 
 builder.Services.AddSingleton<IWeatherClient, WeatherClient>();
 builder.Services.AddSingleton<ICameraClient, CameraClient>();
+builder.Services.AddSingleton<ICountClient, CountClient>();
 
 var app = builder.Build();
 

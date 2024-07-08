@@ -1,5 +1,9 @@
 ﻿@page "/counter"
 @rendermode InteractiveServer
+@using System.Timers
+@using TestCopilot.App.Clients
+@implements IDisposable
+@inject ICountClient _countClient
 
 <PageTitle>Counter</PageTitle>
 
@@ -11,6 +15,24 @@
 
 @code {
     private int currentCount = 0;
+    private Timer timer = new(1000);
+
+    protected override void OnInitialized()
+    {
+        timer.Elapsed += (sender, eventArgs) => OnTimerCallback();
+        timer.Start();
+    }
+
+    private void OnTimerCallback()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            currentCount = await _countClient.Next(currentCount);
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose() => timer.Dispose();
 
     private void IncrementCount()
     {
