@@ -23,22 +23,32 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Restore
+      shell: pwsh
+      run: dotnet restore $env:Solution_Name
+    - name: Build
+      shell: pwsh
+      run: dotnet build $env:Solution_Name -c ${{ matrix.configuration }}
+    - name: Test
+      shell: pwsh
+      run: dotnet test $env:Test_Project_Path
+
     # Install the .NET Core workload
     # - name: Install .NET Core
     #   uses: actions/setup-dotnet@v4
     #   with:
     #     dotnet-version: 8.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
+    # # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    # - name: Setup MSBuild.exe
+    #   uses: microsoft/setup-msbuild@v2
 
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
+    # # Execute all unit tests in the solution
+    # - name: Execute unit tests
+    #   run: dotnet test
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+    # # Restore the application to populate the obj folder with RuntimeIdentifiers
+    # - name: Restore the application
+    #   run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+    #   env:
+    #     Configuration: ${{ matrix.configuration }}
