@@ -1,7 +1,10 @@
 
-name: Manual build
+name: Webhook
 
-on: [workflow_dispatch]
+on:
+  repository_dispatch:
+    types:
+      - webhook
 
 jobs:
   build:
