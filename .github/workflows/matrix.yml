@@ -4,7 +4,8 @@ name: Using matrix strategy
 on: [workflow_dispatch]
 
 jobs:
-  matrix-job:
+  development:
+    environment: development
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,3 +19,10 @@ jobs:
             poil: long
     steps:
       - run: echo "Hello ${{ matrix.color }} ${{ matrix.pet }}, ${{ matrix.age }} yo"
+      
+  production:
+    environment: production
+    needs: development
+    runs-on: ubuntu-latest 
+    steps: 
+      - run: echo "Production is done !"
