@@ -9,8 +9,8 @@ jobs:
     strategy:
       matrix:
         pet: [cat, dog]
-        color: [pink, brown]
         age: [1, 4]
+        color: [pink, brown]
         include:
           - pet: dog
             age: 4
