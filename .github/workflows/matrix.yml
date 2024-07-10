@@ -1,0 +1,12 @@
+jobs:
+  matrix-job:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pet: [cat, dog]
+        color: [pink, brown]
+        include:
+          - color: white
+            pet: dog
+    steps:
+      - run: echo "Hello ${{ matrix.color }} ${{ matrix.pet }}"
