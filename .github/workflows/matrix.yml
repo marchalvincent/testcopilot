@@ -16,4 +16,4 @@ jobs:
             age: 4
             pet: dog
     steps:
-      - run: echo "Hello ${{ matrix.color }} ${{ matrix.pet }}"
+      - run: echo "Hello ${{ matrix.color }} ${{ matrix.pet }}, ${{ matrix.age }} yo"
