@@ -34,6 +34,10 @@ jobs:
         # Commonly enabled options, see https://github.com/actions/dependency-review-action#configuration-options for all available options.
         with:
           comment-summary-in-pr: always
-        #   fail-on-severity: moderate
+          fail-on-severity: high
+          allow-licenses:
+            - GPL-3.0-only
+            - BSD-3-Clause
+            - MIT
         #   deny-licenses: GPL-1.0-or-later, LGPL-2.0-or-later
         #   retry-on-snapshot-warnings: true
