@@ -12,7 +12,9 @@ updates:
     groups:
       version-group:
         applies-to: version-updates
-        update-types: minor
+        update-types: 
+          - "minor"
+          - "patch"
         patterns:
           - "MSTest*"
   
