@@ -1,7 +1,5 @@
 ﻿using Azure;
 using Azure.AI.Vision.Face;
-using System.Collections.ObjectModel;
-using System.Net.Http.Headers;
 
 namespace TestCopilot.App.Clients
 {
@@ -32,7 +30,7 @@ namespace TestCopilot.App.Clients
                     BaseAddress = new Uri(new Uri(_faceApiUrl), "/face/v1.0")
                 };
                 bytes = File.ReadAllBytes(Path.GetFullPath("C:\\Users\\vincent.marchal\\Downloads\\face-detection-demo0-61ea2b10.png"));
-                var content = new ByteArrayContent(bytes);
+                using var content = new ByteArrayContent(bytes);
                 content.Headers.Add("Ocp-Apim-Subscription-Key", _faceApiKey);
                 var response = await httpClient.PostAsync("detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_04&returnRecognitionModel=false&detectionModel=detection_03&faceIdTimeToLive=86400", content);
 
@@ -45,7 +43,7 @@ namespace TestCopilot.App.Clients
                     throw new Exception(response?.ReasonPhrase);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;
@@ -73,7 +71,7 @@ namespace TestCopilot.App.Clients
                     );
                 return response.Value;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;

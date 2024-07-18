@@ -7,6 +7,7 @@ namespace TestCopilot.Api.Controllers
     [Route("[controller]")]
     public class PrimesController : ControllerBase
     {
+        private static readonly Dictionary<int, bool> PrimeCache = new Dictionary<int, bool>();
 
         /**
          * A method that takes an integer and iterates from 0 to that integer and print if the current number is prime or not.
@@ -25,13 +26,11 @@ namespace TestCopilot.Api.Controllers
             return sb.ToString();
         }
 
-        private static readonly Dictionary<int, bool> PrimeCache = new Dictionary<int, bool>();
-
         public static bool IsPrime(int number)
         {
-            if (PrimeCache.ContainsKey(number))
+            if (PrimeCache.TryGetValue(number, out bool isPrime))
             {
-                return PrimeCache[number];
+                return isPrime;
             }
 
             if (number <= 1)
