@@ -32,6 +32,48 @@ namespace TestCopilot.Api.Controllers
             .ToArray();
         }
 
+        // GPT-4o
+        [HttpGet("france-weather", Name = "GetFranceWeather")]
+        public IEnumerable<WeatherForecast> GetFranceWeather()
+        {
+            var cities = new[] { "Paris", "Lyon", "Marseille", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille" };
+            var forecasts = new List<WeatherForecast>();
 
+            foreach (var city in cities)
+            {
+                forecasts.Add(new WeatherForecast
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = city
+                });
+                forecasts.Add(new WeatherForecast
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(1)),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = city
+                });
+            }
+
+            return forecasts;
+        }
+
+        // o1-mini
+        [HttpGet("franceweather", Name = "FranceWeather")]
+        public IEnumerable<WeatherForecast> FranceWeather()
+        {
+            var cities = new[] { "Paris", "Lyon", "Marseille", "Nice", "Toulouse", "Bordeaux", "Lille", "Nantes", "Strasbourg", "Montpellier" };
+            var dates = new[]
+            {
+                DateOnly.FromDateTime(DateTime.Now),
+                DateOnly.FromDateTime(DateTime.Now.AddDays(1))
+            };
+            return cities.SelectMany(city => dates.Select(date => new WeatherForecast
+            {
+                Date = date,
+                TemperatureC = Random.Shared.Next(-10, 40),
+                Summary = city
+            }));
+        }
     }
 }
