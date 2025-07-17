@@ -89,13 +89,13 @@ resources:
     id: "Microsoft.Azd"
     source: "winget"
 
-# - name: winget_Postman.Postman
-#   type: Microsoft.WinGet/Package
-#   metadata:
-#     description: "Install Postman.Postman"
-#   properties:
-#     id: "Postman.Postman"
-#     source: "winget"
+- name: winget_Postman.Postman
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Postman.Postman"
+  properties:
+    id: "Postman.Postman"
+    source: "winget"
     
 # IDEs & Code Editors
 - name: winget_Notepad++.Notepad++
@@ -139,13 +139,13 @@ resources:
     id: "Microsoft.Azure.StorageExplorer"
     source: "winget"
 
-# - name: winget_RedHat.Podman
-#   type: Microsoft.WinGet/Package
-#   metadata:
-#     description: "Install RedHat.Podman"
-#   properties:
-#     id: "RedHat.Podman"
-#     source: "winget"
+- name: winget_RedHat.Podman
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install RedHat.Podman"
+  properties:
+    id: "RedHat.Podman"
+    source: "winget"
     
 - name: winget_RedHat.Podman-Desktop
   type: Microsoft.WinGet/Package
@@ -155,78 +155,26 @@ resources:
     id: "RedHat.Podman-Desktop"
     source: "winget"
 
+- name: winget_JGraph.Draw
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install JGraph.Draw"
+  properties:
+    id: "JGraph.Draw"
+    source: "winget"
 
-# - name: winget_JGraph.Draw
-#   type: Microsoft.WinGet/Package
-#   metadata:
-#     description: "Install JGraph.Draw"
-#   properties:
-#     id: "JGraph.Draw"
-#     source: "winget"
+- name: winget_Microsoft.AzureDataStudio
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Microsoft.AzureDataStudio"
+  properties:
+    id: "Microsoft.AzureDataStudio"
+    source: "winget"
 
-# - name: winget_Microsoft.AzureDataStudio
-#   type: Microsoft.WinGet/Package
-#   metadata:
-#     description: "Install Microsoft.AzureDataStudio"
-#   properties:
-#     id: "Microsoft.AzureDataStudio"
-#     source: "winget"
-
-# - name: winget_Fortinet.FortiClientVPN
-#   type: Microsoft.WinGet/Package
-#   metadata:
-#     description: "Install Fortinet.FortiClientVPN"
-#   properties:
-#     id: "Fortinet.FortiClientVPN"
-#     source: "winget"
-
-
-# ===========================================
-# OLD CONFIGURATION
-# ===========================================
-  # resources:
-  #   ### Configure Git to use Default WAM account
-  #   - resource: PSDscResources/Script
-  #     dependsOn:
-  #       - git
-  #     directives:
-  #       description: Configure Git to use Default WAM account
-  #     settings:
-  #       SetScript: |
-  #         $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
-  #         SET GCM_MSAUTH_USEDEFAULTACCOUNT="true"
-  #         git config --global credential.msauthUseDefaultAccount true
-  #       GetScript: return $false
-  #       TestScript: return $false
-
-  #   ### IDEs & Code Editors
-  #   - resource: Microsoft.VisualStudio.DSC/VSComponents
-  #     dependsOn:
-  #       - visualstudio
-  #     directives:
-  #       description: Install VS workloads for Azure
-  #       securityContext: elevated
-  #     settings:
-  #       productId: Microsoft.VisualStudio.Workload.Azure
-  #       channelId: VisualStudio.17.Preview 
-  #       vsConfigFile: '${WinGetConfigRoot}\..\.vsconfig'
-  #   - resource: Microsoft.VisualStudio.DSC/VSComponents
-  #     dependsOn:
-  #       - visualstudio
-  #     directives:
-  #       description: Install VS workloads for Data
-  #       securityContext: elevated
-  #     settings:
-  #       productId: Microsoft.VisualStudio.Workload.Data
-  #       channelId: VisualStudio.17.Preview 
-  #       vsConfigFile: '${WinGetConfigRoot}\..\.vsconfig'
-  #   - resource: Microsoft.VisualStudio.DSC/VSComponents
-  #     dependsOn:
-  #       - visualstudio
-  #     directives:
-  #       description: Install VS workloads for Web Development
-  #       securityContext: elevated
-  #     settings:
-  #       productId: Microsoft.VisualStudio.Workload.NetWeb
-  #       channelId: VisualStudio.17.Preview 
-  #       vsConfigFile: '${WinGetConfigRoot}\..\.vsconfig'
+- name: winget_Fortinet.FortiClientVPN
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Fortinet.FortiClientVPN"
+  properties:
+    id: "Fortinet.FortiClientVPN"
+    source: "winget"
