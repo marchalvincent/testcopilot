@@ -23,59 +23,42 @@ namespace TestCopilot.App.Clients
 
         public async Task<IReadOnlyList<FaceDetectionResult>?> AnalyseFacesAsync(byte[] bytes)
         {
-            try
+            using var httpClient = new HttpClient()
             {
-                using var httpClient = new HttpClient()
-                {
-                    BaseAddress = new Uri(new Uri(_faceApiUrl), "/face/v1.0")
-                };
-                bytes = File.ReadAllBytes(Path.GetFullPath("C:\\Users\\vincent.marchal\\Downloads\\face-detection-demo0-61ea2b10.png"));
-                using var content = new ByteArrayContent(bytes);
-                content.Headers.Add("Ocp-Apim-Subscription-Key", _faceApiKey);
-                var response = await httpClient.PostAsync("detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_04&returnRecognitionModel=false&detectionModel=detection_03&faceIdTimeToLive=86400", content);
+                BaseAddress = new Uri(new Uri(_faceApiUrl), "/face/v1.0")
+            };
+            using var content = new ByteArrayContent(bytes);
+            content.Headers.Add("Ocp-Apim-Subscription-Key", _faceApiKey);
+            var response = await httpClient.PostAsync("detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_04&returnRecognitionModel=false&detectionModel=detection_03&faceIdTimeToLive=86400", content);
 
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    return await response.Content.ReadFromJsonAsync<IReadOnlyList<FaceDetectionResult>?>();
-                }
-                else
-                {
-                    throw new Exception(response?.ReasonPhrase);
-                }
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await response.Content.ReadFromJsonAsync<IReadOnlyList<FaceDetectionResult>?>();
             }
-            catch (Exception)
+            else
             {
-
-                throw;
+                throw new Exception(response?.ReasonPhrase);
             }
         }
 
         public async Task<IReadOnlyList<FaceDetectionResult>> AnalyseFacesAsyncV1_1(byte[] bytes)
         {
-            try
-            {
-                var response = await _faceClient.DetectAsync(imageContent: new(bytes),
-                        FaceDetectionModel.Detection01,
-                        FaceRecognitionModel.Recognition04,
-                        returnFaceId: false,
-                        new List<FaceAttributeType>(){
-                            FaceAttributeType.Age,
-                            FaceAttributeType.FacialHair,
-                            FaceAttributeType.Accessories,
-                            FaceAttributeType.Exposure,
-                            FaceAttributeType.Hair,
-                            FaceAttributeType.Glasses,
-                            FaceAttributeType.Smile
-                        },
-                        returnFaceLandmarks: false
-                    );
-                return response.Value;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            var response = await _faceClient.DetectAsync(imageContent: new(bytes),
+                    FaceDetectionModel.Detection01,
+                    FaceRecognitionModel.Recognition04,
+                    returnFaceId: false,
+                    new List<FaceAttributeType>(){
+                        FaceAttributeType.Age,
+                        FaceAttributeType.FacialHair,
+                        FaceAttributeType.Accessories,
+                        FaceAttributeType.Exposure,
+                        FaceAttributeType.Hair,
+                        FaceAttributeType.Glasses,
+                        FaceAttributeType.Smile
+                    },
+                    returnFaceLandmarks: false
+                );
+            return response.Value;
         }
     }
 }

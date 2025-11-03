@@ -42,7 +42,7 @@
 }
 
 @code {
-    private IReadOnlyList<FaceDetectionResult> _faceResult;
+    private IReadOnlyList<FaceDetectionResult>? _faceResult;
     private bool loadingFaceApi = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -64,7 +64,8 @@
     {
         loadingFaceApi = true;
         byte[] imageData = Convert.FromBase64String(imageString.Split(',')[1]);
-        _faceResult = await cameraClient.AnalyseFacesAsync(imageData);
+        var result = await cameraClient.AnalyseFacesAsync(imageData);
+        _faceResult = result;
         loadingFaceApi = false;
     }
 }
