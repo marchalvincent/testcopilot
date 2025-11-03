@@ -5,7 +5,7 @@ namespace TestCopilot.Api.Tests
     [TestClass]
     public class WeatherForecastControllerUnitTest
     {
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(-1, false)]
         [DataRow(0, false)]
         [DataRow(1, false)]

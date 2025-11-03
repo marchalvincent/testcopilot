@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 using TestCopilot.Models;
 
 namespace TestCopilot.Api.Controllers
