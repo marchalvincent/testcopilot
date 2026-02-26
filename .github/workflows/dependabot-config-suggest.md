@@ -10,15 +10,13 @@ permissions:
 tools:
   github:
     toolsets: [context, repos]
-  edit:
   bash: true
 safe-outputs:
-  create-pull-request:
+  create-issue:
     title-prefix: "[dependabot-suggest] "
     labels: [dependencies, automation]
-    draft: true
-    if-no-changes: warn
-    expires: 14
+    close-older-issues: true
+    max: 1
 network: defaults
 ---
 
@@ -63,13 +61,46 @@ You are an expert in GitHub Dependabot configuration. Your goal is to analyze th
    - Preserve any existing manual customizations (open PRs limits, registries, etc.) unless they are clearly wrong.
    - For GitHub Actions ecosystem (directory `/`), always add an entry if `.github/workflows/` contains workflow files.
 
-5. **Write the changes**:
-   - Use the `edit` tool to write the new or updated content to `.github/dependabot.yml`.
-   - Ensure the file is valid YAML and contains a `version: 2` header.
+5. **Compose the issue body**:
 
-6. **Create a pull request** with the updated `.github/dependabot.yml`.
-   - The PR body must include:
-     - A summary of what ecosystems were detected and their dependency counts.
-     - An explanation of every change made compared to the existing configuration (or note that a new file was created).
-     - If groups were added, explain which packages fall into each group and why.
-     - A note asking maintainers to review and adjust the schedule or groups if needed.
+   Write a well-structured Markdown issue body that contains the following sections:
+
+   ### 📦 Detected ecosystems
+   A table listing each detected ecosystem, the manifest path, and the number of dependencies found.
+
+   ### 🔍 Analysis of the current configuration
+   - If `.github/dependabot.yml` already exists: list what is already correct, what is missing, and what could be improved (e.g., missing ecosystems, missing groups, suboptimal schedule).
+   - If no `.github/dependabot.yml` exists: note that no configuration was found and that one should be created from scratch.
+
+   ### 💡 Why group Dependabot updates?
+   Explain the benefits of grouping in plain language, for example:
+   - Reduce the number of individual PRs opened by Dependabot (one PR per group instead of one per package).
+   - Make reviews easier: a single "bump all test-framework packages" PR is faster to review than a dozen separate ones.
+   - Group updates are less likely to cause merge conflicts with each other.
+   - Recommended whenever a project has 10 or more dependencies in an ecosystem.
+
+   ### 🛠️ Step-by-step instructions
+   Numbered list of exactly what a maintainer must do to apply the suggestion:
+   1. Create or open `.github/dependabot.yml` in the repository root.
+   2. Replace its content with the ready-to-use configuration block below (or merge the new entries in if partial configuration already exists).
+   3. Commit and push the change on the default branch.
+   4. Verify that Dependabot is enabled in the repository **Settings → Code security → Dependabot**.
+   5. Wait for the first scheduled run or trigger a manual check via **Insights → Dependency graph → Dependabot**.
+
+   ### ✅ Ready-to-use `dependabot.yml` configuration
+   A fenced YAML code block containing the complete suggested `dependabot.yml` (version 2 header included).
+   - Include every detected ecosystem with the correct `directory`.
+   - Add `groups:` where warranted (see grouping rules in step 4 above).
+   - Add inline comments in the YAML to explain non-obvious choices (e.g., why a group was created, why `daily` was chosen over `weekly`).
+
+   ### ⚠️ Points requiring maintainer review
+   A bulleted list of items that need human judgment, for example:
+   - Confirm the update schedule matches the team's capacity.
+   - Check whether any private registries or authentication configuration is needed.
+   - Adjust group patterns if the suggested grouping does not reflect actual dependencies.
+
+6. **Create the issue** using the body composed above.
+   - Do **not** write or modify any file in the repository. The entire output is the issue.
+   - The issue title must be clear and actionable, e.g. "Dependabot configuration: suggested setup for [detected ecosystems]".
+   - Close any previous issue created by this workflow (the `close-older-issues: true` setting handles this automatically).
+
